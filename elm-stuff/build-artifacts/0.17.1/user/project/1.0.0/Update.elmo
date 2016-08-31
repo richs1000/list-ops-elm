@@ -1,0 +1,147 @@
+var _user$project$Update$update = F2(
+	function (msg, model) {
+		update:
+		while (true) {
+			var _p0 = msg;
+			switch (_p0.ctor) {
+				case 'Reset':
+					return {
+						ctor: '_Tuple2',
+						_0: _user$project$Model$initModel,
+						_1: A2(
+							_elm_lang$core$Random$generate,
+							_user$project$MessageTypes$NewRandomValues,
+							A2(
+								_elm_lang$core$Random$list,
+								15,
+								A2(_elm_lang$core$Random$int, 1, 15)))
+					};
+				case 'NewRandomValues':
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{randomValues: _p0._0}),
+						_1: A2(
+							_elm_lang$core$Random$generate,
+							_user$project$MessageTypes$NewQuestion,
+							A2(_elm_lang$core$Random$int, 1, 3))
+					};
+				case 'NewQuestion':
+					var question$ = A2(
+						_elm_lang$core$Debug$log,
+						'question index ',
+						A2(_user$project$Question$newQuestion, model.randomValues, _p0._0));
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{question: question$, success: _elm_lang$core$Maybe$Nothing, userInput: ''}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				case 'UserInput':
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{userInput: _p0._0}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				case 'Submit':
+					if (_elm_lang$core$String$isEmpty(model.userInput)) {
+						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+					} else {
+						var _p1 = model.question;
+						var question = _p1.question;
+						var distractors = _p1.distractors;
+						var answer = _p1.answer;
+						var newHistory = A2(_elm_lang$core$List$take, model.denominator - 1, model.history);
+						return _elm_lang$core$Native_Utils.eq(
+							_elm_lang$core$Basics$fst(answer),
+							model.userInput) ? {
+							ctor: '_Tuple2',
+							_0: _elm_lang$core$Native_Utils.update(
+								model,
+								{
+									success: _elm_lang$core$Maybe$Just(true),
+									history: A2(
+										_elm_lang$core$List_ops['::'],
+										_elm_lang$core$Maybe$Just(true),
+										newHistory),
+									feedback: _elm_lang$core$Basics$snd(answer)
+								}),
+							_1: _elm_lang$core$Platform_Cmd$none
+						} : {
+							ctor: '_Tuple2',
+							_0: _elm_lang$core$Native_Utils.update(
+								model,
+								{
+									success: _elm_lang$core$Maybe$Just(false),
+									history: A2(
+										_elm_lang$core$List_ops['::'],
+										_elm_lang$core$Maybe$Just(false),
+										newHistory),
+									feedback: A3(
+										_user$project$Question$findFeedback,
+										_elm_lang$core$Basics$fst(answer),
+										model.userInput,
+										distractors)
+								}),
+							_1: _elm_lang$core$Platform_Cmd$none
+						};
+					}
+				case 'GiveFeedback':
+					var _v1 = _user$project$MessageTypes$CheckMastery,
+						_v2 = model;
+					msg = _v1;
+					model = _v2;
+					continue update;
+				case 'CheckMastery':
+					if (_user$project$Model$masteryAchieved(model)) {
+						var _v3 = _user$project$MessageTypes$UpdateMastery,
+							_v4 = _elm_lang$core$Native_Utils.update(
+							model,
+							{mastery: true});
+						msg = _v3;
+						model = _v4;
+						continue update;
+					} else {
+						return {
+							ctor: '_Tuple2',
+							_0: _elm_lang$core$Native_Utils.update(
+								model,
+								{mastery: false}),
+							_1: A2(
+								_elm_lang$core$Random$generate,
+								_user$project$MessageTypes$NewRandomValues,
+								A2(
+									_elm_lang$core$Random$list,
+									15,
+									A2(_elm_lang$core$Random$int, 1, 15)))
+						};
+					}
+				case 'UpdateMastery':
+					return {
+						ctor: '_Tuple2',
+						_0: model,
+						_1: _user$project$Ports$updateMastery(model.mastery)
+					};
+				default:
+					var _p2 = _p0._0;
+					var debug$ = A2(_elm_lang$core$Debug$log, 'got values from smart sparrow: ', _p2.debug);
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{mastery: _p2.mastery, numerator: _p2.numerator, denominator: _p2.denominator, implementMastery: _p2.implementMastery, debug: _p2.debug}),
+						_1: A2(
+							_elm_lang$core$Random$generate,
+							_user$project$MessageTypes$NewRandomValues,
+							A2(
+								_elm_lang$core$Random$list,
+								15,
+								A2(_elm_lang$core$Random$int, 1, 15)))
+					};
+			}
+		}
+	});

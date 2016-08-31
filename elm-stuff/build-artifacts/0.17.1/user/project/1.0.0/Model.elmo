@@ -1,0 +1,33 @@
+var _user$project$Model$initModel = {
+	debug: true,
+	userInput: '',
+	history: _elm_lang$core$Native_List.fromArray(
+		[]),
+	success: _elm_lang$core$Maybe$Nothing,
+	question: _user$project$Question$emptyQuestion,
+	feedback: '',
+	randomValues: _elm_lang$core$Native_List.fromArray(
+		[]),
+	mastery: false,
+	numerator: 3,
+	denominator: 5,
+	implementMastery: false
+};
+var _user$project$Model$init = {ctor: '_Tuple2', _0: _user$project$Model$initModel, _1: _elm_lang$core$Platform_Cmd$none};
+var _user$project$Model$masteryAchieved = function (model) {
+	var correctAnswers = A5(
+		_elm_lang$core$Debug$log,
+		'in masteryAchieved ',
+		_elm_lang$core$List$foldr,
+		F2(
+			function (h, acc) {
+				return _elm_lang$core$Native_Utils.eq(
+					h,
+					_elm_lang$core$Maybe$Just(true)) ? (acc + 1) : acc;
+			}),
+		0,
+		model.history);
+	return model.implementMastery ? (_elm_lang$core$Native_Utils.cmp(correctAnswers, model.numerator) > -1) : (_elm_lang$core$Native_Utils.cmp(
+		_elm_lang$core$List$length(model.history),
+		model.numerator) > -1);
+};

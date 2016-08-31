@@ -1,0 +1,23 @@
+var _user$project$ModelType$Model = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return function (k) {
+											return {debug: a, userInput: b, history: c, question: d, success: e, feedback: f, randomValues: g, mastery: h, numerator: i, denominator: j, implementMastery: k};
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};

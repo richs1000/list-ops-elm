@@ -1,0 +1,249 @@
+var _user$project$Question$findFeedback = F3(
+	function (answer, response, distractors) {
+		findFeedback:
+		while (true) {
+			var _p0 = distractors;
+			if (_p0.ctor === '[]') {
+				return A2(_elm_lang$core$Basics_ops['++'], 'Incorrect. The answer is ', answer);
+			} else {
+				var _p1 = _p0._0;
+				if (_elm_lang$core$Native_Utils.eq(
+					_elm_lang$core$Basics$fst(_p1),
+					response) || _elm_lang$core$Native_Utils.eq(
+					_elm_lang$core$Basics$fst(_p1),
+					'')) {
+					return A2(
+						_elm_lang$core$Basics_ops['++'],
+						_elm_lang$core$Basics$snd(_p1),
+						A2(_elm_lang$core$Basics_ops['++'], ' The answer is ', answer));
+				} else {
+					var _v1 = answer,
+						_v2 = response,
+						_v3 = _p0._1;
+					answer = _v1;
+					response = _v2;
+					distractors = _v3;
+					continue findFeedback;
+				}
+			}
+		}
+	});
+var _user$project$Question$pickOne = F3(
+	function (randomValues, lst, defVal) {
+		var rv = A2(
+			_elm_lang$core$Maybe$withDefault,
+			0,
+			_elm_lang$core$List$head(randomValues));
+		var index = A2(
+			_elm_lang$core$Basics$rem,
+			rv,
+			_elm_lang$core$List$length(lst));
+		return A2(
+			_elm_lang$core$Maybe$withDefault,
+			defVal,
+			_elm_lang$core$List$head(
+				A2(_elm_lang$core$List$drop, index, lst)));
+	});
+var _user$project$Question$pickABunch = F4(
+	function (randomValues, cnt, lst, defVal) {
+		return _elm_lang$core$Native_Utils.eq(cnt, 0) ? _elm_lang$core$Native_List.fromArray(
+			[]) : A2(
+			_elm_lang$core$List_ops['::'],
+			A3(_user$project$Question$pickOne, randomValues, lst, defVal),
+			A4(
+				_user$project$Question$pickABunch,
+				A2(_elm_lang$core$List$drop, 1, randomValues),
+				cnt - 1,
+				lst,
+				defVal));
+	});
+var _user$project$Question$Question = F4(
+	function (a, b, c, d) {
+		return {question: a, distractors: b, answer: c, format: d};
+	});
+var _user$project$Question$MultipleChoice = {ctor: 'MultipleChoice'};
+var _user$project$Question$newQuestion = F2(
+	function (randomValues, index) {
+		var subListThree = A4(
+			_user$project$Question$pickABunch,
+			A2(_elm_lang$core$List$drop, 9, randomValues),
+			3,
+			_elm_lang$core$Native_List.range(0, 9),
+			A3(
+				_user$project$Question$pickOne,
+				A2(_elm_lang$core$List$drop, 8, randomValues),
+				_elm_lang$core$Native_List.fromArray(
+					[1, 2, 3]),
+				1));
+		var subListTwo = A4(
+			_user$project$Question$pickABunch,
+			A2(_elm_lang$core$List$drop, 5, randomValues),
+			3,
+			_elm_lang$core$Native_List.range(0, 9),
+			A3(
+				_user$project$Question$pickOne,
+				A2(_elm_lang$core$List$drop, 4, randomValues),
+				_elm_lang$core$Native_List.fromArray(
+					[1, 2, 3]),
+				1));
+		var subListOne = A4(
+			_user$project$Question$pickABunch,
+			A2(_elm_lang$core$List$drop, 1, randomValues),
+			3,
+			_elm_lang$core$Native_List.range(0, 9),
+			A3(
+				_user$project$Question$pickOne,
+				randomValues,
+				_elm_lang$core$Native_List.fromArray(
+					[1, 2, 3]),
+				1));
+		if (_elm_lang$core$Native_Utils.eq(index, 1)) {
+			var distractors = _elm_lang$core$Native_List.fromArray(
+				[
+					{
+					ctor: '_Tuple2',
+					_0: 'hd e',
+					_1: _elm_lang$core$Basics$toString(
+						A2(
+							_elm_lang$core$Maybe$withDefault,
+							0,
+							_elm_lang$core$List$head(subListOne)))
+				},
+					{
+					ctor: '_Tuple2',
+					_0: 'tl e',
+					_1: _elm_lang$core$Basics$toString(
+						A2(_elm_lang$core$List$drop, 1, subListOne))
+				},
+					{
+					ctor: '_Tuple2',
+					_0: 'tl (tl e)',
+					_1: _elm_lang$core$Basics$toString(
+						A2(_elm_lang$core$List$drop, 2, subListOne))
+				},
+					{
+					ctor: '_Tuple2',
+					_0: 'tl (tl (tl e))',
+					_1: _elm_lang$core$Basics$toString(
+						A2(_elm_lang$core$List$drop, 3, subListOne))
+				}
+				]);
+			var myOp = A3(
+				_user$project$Question$pickOne,
+				A2(_elm_lang$core$List$drop, 10, randomValues),
+				_elm_lang$core$Native_List.fromArray(
+					['hd e', 'tl e', 'tl (tl e)', 'tl (tl (tl e))']),
+				'hd e');
+			var question$ = _elm_lang$core$Native_List.fromArray(
+				[
+					'What is the value of ans after the following ML expressions are evaluated?',
+					A2(
+					_elm_lang$core$Basics_ops['++'],
+					'e = ',
+					_elm_lang$core$Basics$toString(subListOne)),
+					A2(_elm_lang$core$Basics_ops['++'], 'ans = ', myOp)
+				]);
+			var _p2 = A2(
+				_elm_lang$core$List$partition,
+				function (_p3) {
+					var _p4 = _p3;
+					return _elm_lang$core$Native_Utils.eq(_p4._0, myOp);
+				},
+				distractors);
+			var answers = _p2._0;
+			var distractors$ = _p2._1;
+			var answer$ = A2(
+				_elm_lang$core$Maybe$withDefault,
+				{ctor: '_Tuple2', _0: 'uh oh', _1: 'uh oh'},
+				_elm_lang$core$List$head(answers));
+			return {
+				question: question$,
+				distractors: A2(
+					_elm_lang$core$List$map,
+					function (_p5) {
+						var _p6 = _p5;
+						return {ctor: '_Tuple2', _0: _p6._1, _1: 'Incorrect.'};
+					},
+					distractors$),
+				answer: {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Basics$snd(answer$),
+					_1: 'Correct'
+				},
+				format: _user$project$Question$MultipleChoice
+			};
+		} else {
+			var newItem = A3(
+				_user$project$Question$pickOne,
+				A2(_elm_lang$core$List$drop, 10, randomValues),
+				_elm_lang$core$Native_List.range(0, 9),
+				0);
+			var question$ = _elm_lang$core$Native_List.fromArray(
+				[
+					'What is the value of ans after the following ML expressions are evaluated?',
+					A2(
+					_elm_lang$core$Basics_ops['++'],
+					'e = ',
+					_elm_lang$core$Basics$toString(subListOne)),
+					A2(
+					_elm_lang$core$Basics_ops['++'],
+					'ans = ',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						_elm_lang$core$Basics$toString(newItem),
+						' :: e'))
+				]);
+			var distractors$ = _elm_lang$core$Native_List.fromArray(
+				[
+					{
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Basics$toString(newItem),
+					_1: 'Incorrect. The :: operation adds the item on the left to the front of the list on the right. '
+				},
+					{
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Basics$toString(
+						A2(
+							_elm_lang$core$List$append,
+							subListOne,
+							_elm_lang$core$Native_List.fromArray(
+								[newItem]))),
+					_1: 'Incorrect. The :: operation adds the item on the left to the front of the list on the right. '
+				},
+					{
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Basics$toString(
+						A2(
+							_elm_lang$core$List_ops['::'],
+							newItem,
+							A2(_elm_lang$core$List$drop, 1, subListOne))),
+					_1: 'Incorrect. The :: operation adds the item on the left to the front of the list on the right'
+				}
+				]);
+			var answer$ = {
+				ctor: '_Tuple2',
+				_0: _elm_lang$core$Basics$toString(
+					A2(_elm_lang$core$List_ops['::'], newItem, subListOne)),
+				_1: 'Correct. The :: operation adds the item on the left to the front of the list on the right. '
+			};
+			return {
+				question: question$,
+				distractors: distractors$,
+				answer: {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Basics$fst(answer$),
+					_1: 'Correct'
+				},
+				format: _user$project$Question$MultipleChoice
+			};
+		}
+	});
+var _user$project$Question$FillInTheBlank = {ctor: 'FillInTheBlank'};
+var _user$project$Question$emptyQuestion = {
+	question: _elm_lang$core$Native_List.fromArray(
+		[]),
+	distractors: _elm_lang$core$Native_List.fromArray(
+		[]),
+	answer: {ctor: '_Tuple2', _0: '', _1: ''},
+	format: _user$project$Question$FillInTheBlank
+};
