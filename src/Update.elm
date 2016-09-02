@@ -1,7 +1,6 @@
 module Update exposing (..)
 
 import Random exposing (..)
-import Set exposing (..)
 import String exposing (..)
 import ModelType exposing (..)
 import Question exposing (..)
@@ -20,7 +19,7 @@ update msg model =
 
         NewRandomValues newValues ->
             ( { model | randomValues = newValues }
-            , Random.generate NewQuestion (Random.int 1 3)
+            , Random.generate NewQuestion (Random.int 1 4)
             )
 
         -- New Question Flow: NewQuestion -> UserInput -> Submit -> Give Feedback -> Check Mastery

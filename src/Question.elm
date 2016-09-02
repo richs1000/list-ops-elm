@@ -36,7 +36,7 @@ newQuestion randomValues index =
             pickABunch (List.drop 1 randomValues) 3 [0..9] (pickOne randomValues [ 1, 2, 3 ] 1)
     in
         -- list is one deep, head or tail
-        if index == 1 then
+        if index == 1 || index == 2 then
             let
                 myOp =
                     pickOne (List.drop 10 randomValues) [ "hd e", "tl e", "tl (tl e)", "tl (tl (tl e))" ] "hd e"
@@ -59,11 +59,17 @@ newQuestion randomValues index =
 
                 answer' =
                     Maybe.withDefault ( "uh oh", "uh oh" ) (List.head answers)
+
+                format' =
+                    if index == 1 then
+                        MultipleChoice
+                    else
+                        FillInTheBlank
             in
                 { question = question'
                 , distractors = List.map (\( _, dis ) -> ( dis, "Incorrect." )) distractors'
                 , answer = ( snd answer', "Correct" )
-                , format = FillInTheBlank
+                , format = format'
                 }
             -- list is one deep, append
         else
@@ -87,11 +93,17 @@ newQuestion randomValues index =
                     ( toString (newItem :: subListOne)
                     , "Correct. The :: operation adds the item on the left to the front of the list on the right. "
                     )
+
+                format' =
+                    if index == 3 then
+                        MultipleChoice
+                    else
+                        FillInTheBlank
             in
                 { question = question'
                 , distractors = distractors'
                 , answer = ( fst answer', "Correct" )
-                , format = MultipleChoice
+                , format = format'
                 }
 
 

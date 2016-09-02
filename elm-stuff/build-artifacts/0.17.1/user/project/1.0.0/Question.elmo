@@ -55,7 +55,8 @@ var _user$project$Question$newQuestion = F2(
 				_elm_lang$core$Native_List.fromArray(
 					[1, 2, 3]),
 				1));
-		if (_elm_lang$core$Native_Utils.eq(index, 1)) {
+		if (_elm_lang$core$Native_Utils.eq(index, 1) || _elm_lang$core$Native_Utils.eq(index, 2)) {
+			var format$ = _elm_lang$core$Native_Utils.eq(index, 1) ? _user$project$Question$MultipleChoice : _user$project$Question$FillInTheBlank;
 			var distractors = _elm_lang$core$Native_List.fromArray(
 				[
 					{
@@ -128,9 +129,10 @@ var _user$project$Question$newQuestion = F2(
 					_0: _elm_lang$core$Basics$snd(answer$),
 					_1: 'Correct'
 				},
-				format: _user$project$Question$FillInTheBlank
+				format: format$
 			};
 		} else {
+			var format$ = _elm_lang$core$Native_Utils.eq(index, 3) ? _user$project$Question$MultipleChoice : _user$project$Question$FillInTheBlank;
 			var newItem = A3(
 				_user$project$RandomStuff$pickOne,
 				A2(_elm_lang$core$List$drop, 10, randomValues),
@@ -192,7 +194,7 @@ var _user$project$Question$newQuestion = F2(
 					_0: _elm_lang$core$Basics$fst(answer$),
 					_1: 'Correct'
 				},
-				format: _user$project$Question$MultipleChoice
+				format: format$
 			};
 		}
 	});
