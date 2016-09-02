@@ -46,14 +46,7 @@ var _user$project$View$debugSection = function (model) {
 var _user$project$View$questionOrFeedback = function (model) {
 	var _p0 = model.success;
 	if (_p0.ctor === 'Nothing') {
-		return A3(
-			_user$project$QuestionView$displayQuestion,
-			model.question,
-			model.userInput,
-			A2(
-				_elm_lang$core$Maybe$withDefault,
-				0,
-				_elm_lang$core$List$head(model.randomValues)));
+		return A3(_user$project$QuestionView$displayQuestion, model.question, model.userInput, model.randomValues);
 	} else {
 		return A3(_user$project$QuestionView$displayFeedback, model.question, model.userInput, model.feedback);
 	}

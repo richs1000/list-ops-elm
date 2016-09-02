@@ -5,6 +5,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Question exposing (..)
 import MessageTypes exposing (Msg(..))
+import RandomStuff exposing (randomizeListOrder)
 
 
 questionStyle : Html.Attribute msg
@@ -69,16 +70,11 @@ fillInTheBlank quest userInput =
         ]
 
 
-multipleChoiceButtons : ResponseAndFeedback -> List ResponseAndFeedback -> String -> Int -> Html Msg
-multipleChoiceButtons answer distractors userInput randomValue =
+multipleChoiceButtons : ResponseAndFeedback -> List ResponseAndFeedback -> String -> List Int -> Html Msg
+multipleChoiceButtons answer distractors userInput randomValues =
     let
-        answerPosition =
-            randomValue `rem` (1 + (List.length distractors))
-
         allItems =
-            (List.drop answerPosition distractors)
-                |> List.append [ answer ]
-                |> List.append (List.take answerPosition distractors)
+            randomizeListOrder randomValues (answer :: distractors)
 
         radios =
             List.foldl (\i acc -> (radio (fst i) userInput) :: acc) [] allItems
@@ -97,11 +93,11 @@ questionLines qLines =
         )
 
 
-multipleChoice : Question -> String -> Int -> Html Msg
-multipleChoice quest userInput randomValue =
+multipleChoice : Question -> String -> List Int -> Html Msg
+multipleChoice quest userInput randomValues =
     Html.form [ onSubmit Submit ]
         [ questionLines quest.question
-        , (multipleChoiceButtons quest.answer quest.distractors userInput randomValue)
+        , (multipleChoiceButtons quest.answer quest.distractors userInput randomValues)
         , button
             [ Html.Attributes.type' "submit"
             , buttonStyle
@@ -110,14 +106,14 @@ multipleChoice quest userInput randomValue =
         ]
 
 
-displayQuestion : Question -> String -> Int -> Html Msg
-displayQuestion quest userInput randomValue =
+displayQuestion : Question -> String -> List Int -> Html Msg
+displayQuestion quest userInput randomValues =
     case quest.format of
         FillInTheBlank ->
             fillInTheBlank quest userInput
 
         MultipleChoice ->
-            multipleChoice quest userInput randomValue
+            multipleChoice quest userInput randomValues
 
 
 radio : String -> String -> Html Msg

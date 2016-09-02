@@ -36,7 +36,7 @@ questionOrFeedback model =
     case model.success of
         -- No answer has been submitted, so display the question
         Nothing ->
-            displayQuestion model.question model.userInput (Maybe.withDefault 0 (List.head model.randomValues))
+            displayQuestion model.question model.userInput model.randomValues
 
         -- Answer has been submitted, so display the feedback
         Just _ ->

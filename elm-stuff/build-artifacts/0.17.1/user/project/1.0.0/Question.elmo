@@ -28,71 +28,29 @@ var _user$project$Question$findFeedback = F3(
 			}
 		}
 	});
-var _user$project$Question$pickOne = F3(
-	function (randomValues, lst, defVal) {
-		var rv = A2(
-			_elm_lang$core$Maybe$withDefault,
-			0,
-			_elm_lang$core$List$head(randomValues));
-		var index = A2(
-			_elm_lang$core$Basics$rem,
-			rv,
-			_elm_lang$core$List$length(lst));
-		return A2(
-			_elm_lang$core$Maybe$withDefault,
-			defVal,
-			_elm_lang$core$List$head(
-				A2(_elm_lang$core$List$drop, index, lst)));
-	});
-var _user$project$Question$pickABunch = F4(
-	function (randomValues, cnt, lst, defVal) {
-		return _elm_lang$core$Native_Utils.eq(cnt, 0) ? _elm_lang$core$Native_List.fromArray(
-			[]) : A2(
-			_elm_lang$core$List_ops['::'],
-			A3(_user$project$Question$pickOne, randomValues, lst, defVal),
-			A4(
-				_user$project$Question$pickABunch,
-				A2(_elm_lang$core$List$drop, 1, randomValues),
-				cnt - 1,
-				lst,
-				defVal));
-	});
 var _user$project$Question$Question = F4(
 	function (a, b, c, d) {
 		return {question: a, distractors: b, answer: c, format: d};
 	});
 var _user$project$Question$MultipleChoice = {ctor: 'MultipleChoice'};
+var _user$project$Question$FillInTheBlank = {ctor: 'FillInTheBlank'};
+var _user$project$Question$emptyQuestion = {
+	question: _elm_lang$core$Native_List.fromArray(
+		[]),
+	distractors: _elm_lang$core$Native_List.fromArray(
+		[]),
+	answer: {ctor: '_Tuple2', _0: '', _1: ''},
+	format: _user$project$Question$FillInTheBlank
+};
 var _user$project$Question$newQuestion = F2(
 	function (randomValues, index) {
-		var subListThree = A4(
-			_user$project$Question$pickABunch,
-			A2(_elm_lang$core$List$drop, 9, randomValues),
-			3,
-			_elm_lang$core$Native_List.range(0, 9),
-			A3(
-				_user$project$Question$pickOne,
-				A2(_elm_lang$core$List$drop, 8, randomValues),
-				_elm_lang$core$Native_List.fromArray(
-					[1, 2, 3]),
-				1));
-		var subListTwo = A4(
-			_user$project$Question$pickABunch,
-			A2(_elm_lang$core$List$drop, 5, randomValues),
-			3,
-			_elm_lang$core$Native_List.range(0, 9),
-			A3(
-				_user$project$Question$pickOne,
-				A2(_elm_lang$core$List$drop, 4, randomValues),
-				_elm_lang$core$Native_List.fromArray(
-					[1, 2, 3]),
-				1));
 		var subListOne = A4(
-			_user$project$Question$pickABunch,
+			_user$project$RandomStuff$pickABunch,
 			A2(_elm_lang$core$List$drop, 1, randomValues),
 			3,
 			_elm_lang$core$Native_List.range(0, 9),
 			A3(
-				_user$project$Question$pickOne,
+				_user$project$RandomStuff$pickOne,
 				randomValues,
 				_elm_lang$core$Native_List.fromArray(
 					[1, 2, 3]),
@@ -129,7 +87,7 @@ var _user$project$Question$newQuestion = F2(
 				}
 				]);
 			var myOp = A3(
-				_user$project$Question$pickOne,
+				_user$project$RandomStuff$pickOne,
 				A2(_elm_lang$core$List$drop, 10, randomValues),
 				_elm_lang$core$Native_List.fromArray(
 					['hd e', 'tl e', 'tl (tl e)', 'tl (tl (tl e))']),
@@ -170,11 +128,11 @@ var _user$project$Question$newQuestion = F2(
 					_0: _elm_lang$core$Basics$snd(answer$),
 					_1: 'Correct'
 				},
-				format: _user$project$Question$MultipleChoice
+				format: _user$project$Question$FillInTheBlank
 			};
 		} else {
 			var newItem = A3(
-				_user$project$Question$pickOne,
+				_user$project$RandomStuff$pickOne,
 				A2(_elm_lang$core$List$drop, 10, randomValues),
 				_elm_lang$core$Native_List.range(0, 9),
 				0);
@@ -238,12 +196,3 @@ var _user$project$Question$newQuestion = F2(
 			};
 		}
 	});
-var _user$project$Question$FillInTheBlank = {ctor: 'FillInTheBlank'};
-var _user$project$Question$emptyQuestion = {
-	question: _elm_lang$core$Native_List.fromArray(
-		[]),
-	distractors: _elm_lang$core$Native_List.fromArray(
-		[]),
-	answer: {ctor: '_Tuple2', _0: '', _1: ''},
-	format: _user$project$Question$FillInTheBlank
-};
