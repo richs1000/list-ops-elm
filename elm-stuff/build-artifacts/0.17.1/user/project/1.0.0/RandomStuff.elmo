@@ -1,0 +1,110 @@
+var _user$project$RandomStuff$insertIntoList = F3(
+	function (item, index, lst) {
+		return A2(
+			_elm_lang$core$List$append,
+			A2(_elm_lang$core$List$take, index, lst),
+			A2(
+				_elm_lang$core$List_ops['::'],
+				item,
+				A2(_elm_lang$core$List$drop, index, lst)));
+	});
+var _user$project$RandomStuff$compressList = function (lst) {
+	var helperFunc = F2(
+		function (oldLst, newLst) {
+			helperFunc:
+			while (true) {
+				var _p0 = oldLst;
+				if (_p0.ctor === '[]') {
+					return newLst;
+				} else {
+					var _p2 = _p0._1;
+					var _p1 = _p0._0;
+					if (A2(_elm_lang$core$List$member, _p1, newLst)) {
+						var _v1 = _p2,
+							_v2 = newLst;
+						oldLst = _v1;
+						newLst = _v2;
+						continue helperFunc;
+					} else {
+						var _v3 = _p2,
+							_v4 = A2(_elm_lang$core$List_ops['::'], _p1, newLst);
+						oldLst = _v3;
+						newLst = _v4;
+						continue helperFunc;
+					}
+				}
+			}
+		});
+	return A2(
+		helperFunc,
+		lst,
+		_elm_lang$core$Native_List.fromArray(
+			[]));
+};
+var _user$project$RandomStuff$pickOne = F3(
+	function (randomValues, lst, defVal) {
+		var rv = A2(
+			_elm_lang$core$Maybe$withDefault,
+			0,
+			_elm_lang$core$List$head(randomValues));
+		var index = A2(
+			_elm_lang$core$Basics$rem,
+			rv,
+			_elm_lang$core$List$length(lst));
+		return A2(
+			_elm_lang$core$Maybe$withDefault,
+			defVal,
+			_elm_lang$core$List$head(
+				A2(_elm_lang$core$List$drop, index, lst)));
+	});
+var _user$project$RandomStuff$pickABunch = F4(
+	function (randomValues, cnt, lst, defVal) {
+		return _elm_lang$core$Native_Utils.eq(cnt, 0) ? _elm_lang$core$Native_List.fromArray(
+			[]) : A2(
+			_elm_lang$core$List_ops['::'],
+			A3(_user$project$RandomStuff$pickOne, randomValues, lst, defVal),
+			A4(
+				_user$project$RandomStuff$pickABunch,
+				A2(_elm_lang$core$List$drop, 1, randomValues),
+				cnt - 1,
+				lst,
+				defVal));
+	});
+var _user$project$RandomStuff$randomizeListOrder = F2(
+	function (randomValues, lst) {
+		var helperFunc = F3(
+			function (rVals, oldLst, newLst) {
+				helperFunc:
+				while (true) {
+					var _p3 = oldLst;
+					if (_p3.ctor === '[]') {
+						return newLst;
+					} else {
+						if (_p3._1.ctor === '[]') {
+							return A2(_elm_lang$core$List_ops['::'], _p3._0, newLst);
+						} else {
+							var lstLen = _elm_lang$core$List$length(oldLst);
+							var index = A3(
+								_user$project$RandomStuff$pickOne,
+								rVals,
+								_elm_lang$core$Native_List.range(0, lstLen),
+								0);
+							var newLst$ = A3(_user$project$RandomStuff$insertIntoList, _p3._0, index, newLst);
+							var _v6 = A2(_elm_lang$core$List$drop, 1, rVals),
+								_v7 = _p3._1,
+								_v8 = newLst$;
+							rVals = _v6;
+							oldLst = _v7;
+							newLst = _v8;
+							continue helperFunc;
+						}
+					}
+				}
+			});
+		return A3(
+			helperFunc,
+			randomValues,
+			lst,
+			_elm_lang$core$Native_List.fromArray(
+				[]));
+	});

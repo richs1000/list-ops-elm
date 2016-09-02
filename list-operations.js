@@ -9334,6 +9334,117 @@ var _user$project$HistoryView$historySection = F2(
 			A2(_user$project$HistoryView$historyList, history, 0));
 	});
 
+var _user$project$RandomStuff$insertIntoList = F3(
+	function (item, index, lst) {
+		return A2(
+			_elm_lang$core$List$append,
+			A2(_elm_lang$core$List$take, index, lst),
+			A2(
+				_elm_lang$core$List_ops['::'],
+				item,
+				A2(_elm_lang$core$List$drop, index, lst)));
+	});
+var _user$project$RandomStuff$compressList = function (lst) {
+	var helperFunc = F2(
+		function (oldLst, newLst) {
+			helperFunc:
+			while (true) {
+				var _p0 = oldLst;
+				if (_p0.ctor === '[]') {
+					return newLst;
+				} else {
+					var _p2 = _p0._1;
+					var _p1 = _p0._0;
+					if (A2(_elm_lang$core$List$member, _p1, newLst)) {
+						var _v1 = _p2,
+							_v2 = newLst;
+						oldLst = _v1;
+						newLst = _v2;
+						continue helperFunc;
+					} else {
+						var _v3 = _p2,
+							_v4 = A2(_elm_lang$core$List_ops['::'], _p1, newLst);
+						oldLst = _v3;
+						newLst = _v4;
+						continue helperFunc;
+					}
+				}
+			}
+		});
+	return A2(
+		helperFunc,
+		lst,
+		_elm_lang$core$Native_List.fromArray(
+			[]));
+};
+var _user$project$RandomStuff$pickOne = F3(
+	function (randomValues, lst, defVal) {
+		var rv = A2(
+			_elm_lang$core$Maybe$withDefault,
+			0,
+			_elm_lang$core$List$head(randomValues));
+		var index = A2(
+			_elm_lang$core$Basics$rem,
+			rv,
+			_elm_lang$core$List$length(lst));
+		return A2(
+			_elm_lang$core$Maybe$withDefault,
+			defVal,
+			_elm_lang$core$List$head(
+				A2(_elm_lang$core$List$drop, index, lst)));
+	});
+var _user$project$RandomStuff$pickABunch = F4(
+	function (randomValues, cnt, lst, defVal) {
+		return _elm_lang$core$Native_Utils.eq(cnt, 0) ? _elm_lang$core$Native_List.fromArray(
+			[]) : A2(
+			_elm_lang$core$List_ops['::'],
+			A3(_user$project$RandomStuff$pickOne, randomValues, lst, defVal),
+			A4(
+				_user$project$RandomStuff$pickABunch,
+				A2(_elm_lang$core$List$drop, 1, randomValues),
+				cnt - 1,
+				lst,
+				defVal));
+	});
+var _user$project$RandomStuff$randomizeListOrder = F2(
+	function (randomValues, lst) {
+		var helperFunc = F3(
+			function (rVals, oldLst, newLst) {
+				helperFunc:
+				while (true) {
+					var _p3 = oldLst;
+					if (_p3.ctor === '[]') {
+						return newLst;
+					} else {
+						if (_p3._1.ctor === '[]') {
+							return A2(_elm_lang$core$List_ops['::'], _p3._0, newLst);
+						} else {
+							var lstLen = _elm_lang$core$List$length(oldLst);
+							var index = A3(
+								_user$project$RandomStuff$pickOne,
+								rVals,
+								_elm_lang$core$Native_List.range(0, lstLen),
+								0);
+							var newLst$ = A3(_user$project$RandomStuff$insertIntoList, _p3._0, index, newLst);
+							var _v6 = A2(_elm_lang$core$List$drop, 1, rVals),
+								_v7 = _p3._1,
+								_v8 = newLst$;
+							rVals = _v6;
+							oldLst = _v7;
+							newLst = _v8;
+							continue helperFunc;
+						}
+					}
+				}
+			});
+		return A3(
+			helperFunc,
+			randomValues,
+			lst,
+			_elm_lang$core$Native_List.fromArray(
+				[]));
+	});
+
 var _user$project$Question$findFeedback = F3(
 	function (answer, response, distractors) {
 		findFeedback:
@@ -9364,71 +9475,29 @@ var _user$project$Question$findFeedback = F3(
 			}
 		}
 	});
-var _user$project$Question$pickOne = F3(
-	function (randomValues, lst, defVal) {
-		var rv = A2(
-			_elm_lang$core$Maybe$withDefault,
-			0,
-			_elm_lang$core$List$head(randomValues));
-		var index = A2(
-			_elm_lang$core$Basics$rem,
-			rv,
-			_elm_lang$core$List$length(lst));
-		return A2(
-			_elm_lang$core$Maybe$withDefault,
-			defVal,
-			_elm_lang$core$List$head(
-				A2(_elm_lang$core$List$drop, index, lst)));
-	});
-var _user$project$Question$pickABunch = F4(
-	function (randomValues, cnt, lst, defVal) {
-		return _elm_lang$core$Native_Utils.eq(cnt, 0) ? _elm_lang$core$Native_List.fromArray(
-			[]) : A2(
-			_elm_lang$core$List_ops['::'],
-			A3(_user$project$Question$pickOne, randomValues, lst, defVal),
-			A4(
-				_user$project$Question$pickABunch,
-				A2(_elm_lang$core$List$drop, 1, randomValues),
-				cnt - 1,
-				lst,
-				defVal));
-	});
 var _user$project$Question$Question = F4(
 	function (a, b, c, d) {
 		return {question: a, distractors: b, answer: c, format: d};
 	});
 var _user$project$Question$MultipleChoice = {ctor: 'MultipleChoice'};
+var _user$project$Question$FillInTheBlank = {ctor: 'FillInTheBlank'};
+var _user$project$Question$emptyQuestion = {
+	question: _elm_lang$core$Native_List.fromArray(
+		[]),
+	distractors: _elm_lang$core$Native_List.fromArray(
+		[]),
+	answer: {ctor: '_Tuple2', _0: '', _1: ''},
+	format: _user$project$Question$FillInTheBlank
+};
 var _user$project$Question$newQuestion = F2(
 	function (randomValues, index) {
-		var subListThree = A4(
-			_user$project$Question$pickABunch,
-			A2(_elm_lang$core$List$drop, 9, randomValues),
-			3,
-			_elm_lang$core$Native_List.range(0, 9),
-			A3(
-				_user$project$Question$pickOne,
-				A2(_elm_lang$core$List$drop, 8, randomValues),
-				_elm_lang$core$Native_List.fromArray(
-					[1, 2, 3]),
-				1));
-		var subListTwo = A4(
-			_user$project$Question$pickABunch,
-			A2(_elm_lang$core$List$drop, 5, randomValues),
-			3,
-			_elm_lang$core$Native_List.range(0, 9),
-			A3(
-				_user$project$Question$pickOne,
-				A2(_elm_lang$core$List$drop, 4, randomValues),
-				_elm_lang$core$Native_List.fromArray(
-					[1, 2, 3]),
-				1));
 		var subListOne = A4(
-			_user$project$Question$pickABunch,
+			_user$project$RandomStuff$pickABunch,
 			A2(_elm_lang$core$List$drop, 1, randomValues),
 			3,
 			_elm_lang$core$Native_List.range(0, 9),
 			A3(
-				_user$project$Question$pickOne,
+				_user$project$RandomStuff$pickOne,
 				randomValues,
 				_elm_lang$core$Native_List.fromArray(
 					[1, 2, 3]),
@@ -9465,7 +9534,7 @@ var _user$project$Question$newQuestion = F2(
 				}
 				]);
 			var myOp = A3(
-				_user$project$Question$pickOne,
+				_user$project$RandomStuff$pickOne,
 				A2(_elm_lang$core$List$drop, 10, randomValues),
 				_elm_lang$core$Native_List.fromArray(
 					['hd e', 'tl e', 'tl (tl e)', 'tl (tl (tl e))']),
@@ -9506,11 +9575,11 @@ var _user$project$Question$newQuestion = F2(
 					_0: _elm_lang$core$Basics$snd(answer$),
 					_1: 'Correct'
 				},
-				format: _user$project$Question$MultipleChoice
+				format: _user$project$Question$FillInTheBlank
 			};
 		} else {
 			var newItem = A3(
-				_user$project$Question$pickOne,
+				_user$project$RandomStuff$pickOne,
 				A2(_elm_lang$core$List$drop, 10, randomValues),
 				_elm_lang$core$Native_List.range(0, 9),
 				0);
@@ -9574,15 +9643,6 @@ var _user$project$Question$newQuestion = F2(
 			};
 		}
 	});
-var _user$project$Question$FillInTheBlank = {ctor: 'FillInTheBlank'};
-var _user$project$Question$emptyQuestion = {
-	question: _elm_lang$core$Native_List.fromArray(
-		[]),
-	distractors: _elm_lang$core$Native_List.fromArray(
-		[]),
-	answer: {ctor: '_Tuple2', _0: '', _1: ''},
-	format: _user$project$Question$FillInTheBlank
-};
 
 var _user$project$ModelType$Model = function (a) {
 	return function (b) {
@@ -9743,19 +9803,11 @@ var _user$project$QuestionView$radio = F2(
 				]));
 	});
 var _user$project$QuestionView$multipleChoiceButtons = F4(
-	function (answer, distractors, userInput, randomValue) {
-		var answerPosition = A2(
-			_elm_lang$core$Basics$rem,
-			randomValue,
-			1 + _elm_lang$core$List$length(distractors));
+	function (answer, distractors, userInput, randomValues) {
 		var allItems = A2(
-			_elm_lang$core$List$append,
-			A2(_elm_lang$core$List$take, answerPosition, distractors),
-			A2(
-				_elm_lang$core$List$append,
-				_elm_lang$core$Native_List.fromArray(
-					[answer]),
-				A2(_elm_lang$core$List$drop, answerPosition, distractors)));
+			_user$project$RandomStuff$randomizeListOrder,
+			randomValues,
+			A2(_elm_lang$core$List_ops['::'], answer, distractors));
 		var radios = A3(
 			_elm_lang$core$List$foldl,
 			F2(
@@ -9778,7 +9830,7 @@ var _user$project$QuestionView$multipleChoiceButtons = F4(
 			radios);
 	});
 var _user$project$QuestionView$multipleChoice = F3(
-	function (quest, userInput, randomValue) {
+	function (quest, userInput, randomValues) {
 		return A2(
 			_elm_lang$html$Html$form,
 			_elm_lang$core$Native_List.fromArray(
@@ -9788,7 +9840,7 @@ var _user$project$QuestionView$multipleChoice = F3(
 			_elm_lang$core$Native_List.fromArray(
 				[
 					_user$project$QuestionView$questionLines(quest.question),
-					A4(_user$project$QuestionView$multipleChoiceButtons, quest.answer, quest.distractors, userInput, randomValue),
+					A4(_user$project$QuestionView$multipleChoiceButtons, quest.answer, quest.distractors, userInput, randomValues),
 					A2(
 					_elm_lang$html$Html$button,
 					_elm_lang$core$Native_List.fromArray(
@@ -9803,12 +9855,12 @@ var _user$project$QuestionView$multipleChoice = F3(
 				]));
 	});
 var _user$project$QuestionView$displayQuestion = F3(
-	function (quest, userInput, randomValue) {
+	function (quest, userInput, randomValues) {
 		var _p1 = quest.format;
 		if (_p1.ctor === 'FillInTheBlank') {
 			return A2(_user$project$QuestionView$fillInTheBlank, quest, userInput);
 		} else {
-			return A3(_user$project$QuestionView$multipleChoice, quest, userInput, randomValue);
+			return A3(_user$project$QuestionView$multipleChoice, quest, userInput, randomValues);
 		}
 	});
 var _user$project$QuestionView$displayFeedback = F3(
@@ -9903,14 +9955,7 @@ var _user$project$View$debugSection = function (model) {
 var _user$project$View$questionOrFeedback = function (model) {
 	var _p0 = model.success;
 	if (_p0.ctor === 'Nothing') {
-		return A3(
-			_user$project$QuestionView$displayQuestion,
-			model.question,
-			model.userInput,
-			A2(
-				_elm_lang$core$Maybe$withDefault,
-				0,
-				_elm_lang$core$List$head(model.randomValues)));
+		return A3(_user$project$QuestionView$displayQuestion, model.question, model.userInput, model.randomValues);
 	} else {
 		return A3(_user$project$QuestionView$displayFeedback, model.question, model.userInput, model.feedback);
 	}
